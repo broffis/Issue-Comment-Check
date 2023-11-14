@@ -1,5 +1,6 @@
 const QA_APPROVED_TEXT = "[QA Approved]";
 const QA_APPROVED_LABEL = "qa-approved";
+const QA_REACTS = ["eyes", "hooray", "heart"];
 
 module.exports = async ({ context, github }) => {
   const {
@@ -29,11 +30,13 @@ module.exports = async ({ context, github }) => {
       labels: [QA_APPROVED_LABEL],
     });
 
-    github.rest.reactions.createForIssueComment({
-      owner: login,
-      repo: name,
-      comment_id,
-      content: "hooray",
+    QA_REACTS.forEach((emoji) => {
+      github.rest.reactions.createForIssueComment({
+        owner: login,
+        repo: name,
+        comment_id,
+        content: emoji,
+      });
     });
   } else {
     github.rest.issues.removeLabel({
