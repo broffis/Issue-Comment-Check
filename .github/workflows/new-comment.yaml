@@ -7,7 +7,7 @@ jobs:
   pull-request-comment:
     name: On pull request comment
     if: github.event.issue.pull_request
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
