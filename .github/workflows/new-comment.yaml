@@ -4,12 +4,19 @@ on:
     types: [created]
 
 jobs:
+  to-console:
+    name: Log to console
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
   pull-request-comment:
     name: On pull request comment
     if: github.event.issue.pull_request
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: In House Comment Check
         uses: ./.github/actions/issue-comment-check
