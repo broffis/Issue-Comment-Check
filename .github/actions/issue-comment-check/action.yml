@@ -1,3 +1,8 @@
+inputs:
+  token:
+    description: "The GitHub token to use"
+    required: true
+
 runs:
   using: composite
   steps:
