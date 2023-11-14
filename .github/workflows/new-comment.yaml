@@ -12,4 +12,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: In House Comment Check
-        uses: "./.github/actions/issue-comment-check"
+        uses: ./.github/actions/issue-comment-check
