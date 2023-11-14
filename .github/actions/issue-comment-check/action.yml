@@ -7,8 +7,8 @@ runs:
       with:
         node-version-file: ".nvmrc"
     - name: Check Comments
-          uses: actions/github-script@v6
-          with:
-              script: |
-                  const script = require('.github/actions/issue-comment-check/scripts/issue-comment-check.js');
-                  await script({ context })
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const script = require('.github/actions/issue-comment-check/scripts/issue-comment-check.js');
+          await script({ context })
