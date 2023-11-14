@@ -1,0 +1,15 @@
+name: "Handle new comments"
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  pull-request-comment:
+    name: On pull request comment
+    if: github.event.issue.pull_request
+    runs-on: ubuntu-latests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: In House Comment Check
+        uses: "./.github/actions/issue-comment-check"
