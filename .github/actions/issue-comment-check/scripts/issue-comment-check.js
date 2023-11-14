@@ -33,7 +33,7 @@ module.exports = async ({ context, github }) => {
       owner: login,
       repo: name,
       issue_number: issue.number,
-      labels: [{ name: QA_APPROVED_LABEL }],
+      labels: [QA_APPROVED_LABEL],
     });
   }
   // else {
