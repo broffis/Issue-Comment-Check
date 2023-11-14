@@ -6,8 +6,6 @@ module.exports = async ({ context, github }) => {
     payload: { comment, issue, repository },
   } = context;
 
-  const { id } = comment;
-
   const {
     name,
     owner: { login },
@@ -19,7 +17,7 @@ module.exports = async ({ context, github }) => {
     issue_number: issue.number,
   });
 
-  const isApproved = hasQaComment(comments);
+  const { isApproved } = hasQaComment(comments);
 
   console.log({ isApproved });
 
@@ -31,12 +29,12 @@ module.exports = async ({ context, github }) => {
       labels: [QA_APPROVED_LABEL],
     });
 
-    github.rest.reactions.createForIssueComment({
-      owner: login,
-      repo: name,
-      comment_id: id,
-      content: "hooray",
-    });
+    // github.rest.reactions.createForIssueComment({
+    //   owner: login,
+    //   repo: name,
+    //   comment_id: id,
+    //   content: "hooray",
+    // });
   } else {
     github.rest.issues.removeLabel({
       owner: login,
@@ -48,5 +46,16 @@ module.exports = async ({ context, github }) => {
 };
 
 const hasQaComment = (comments) => {
-  return comments.some((comment) => comment.body.includes(QA_APPROVED_TEXT));
+  const [commentApproved] = comments.filter((comment) =>
+    comment.body.includes(QA_APPROVED_TEXT)
+  );
+
+  console.log({ commentApproved });
+
+  return {
+    isApproved: comments.some((comment) =>
+      comment.body.includes(QA_APPROVED_TEXT)
+    ),
+    id: commentApproved?.id,
+  };
 };
