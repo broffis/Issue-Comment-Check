@@ -11,4 +11,4 @@ runs:
       with:
         script: |
           const script = require('.github/actions/issue-comment-check/scripts/issue-comment-check.js');
-          await script({ context })
+          await script({ context, github })
