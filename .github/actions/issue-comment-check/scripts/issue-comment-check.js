@@ -6,17 +6,12 @@ module.exports = async ({ context, github }) => {
     payload: { comment, issue, repository },
   } = context;
 
-  //   console.log({ comment, issue, repository });
-
-  // comment.body for issue text
-  // issue.number for issue_number
-  // repository.name for repo
-  // repository.owner.login for owner
+  const { id } = comment;
 
   const {
     name,
     owner: { login },
-  } = context.payload.repository;
+  } = repository;
 
   const { data: comments } = await github.rest.issues.listComments({
     owner: login,
@@ -34,6 +29,13 @@ module.exports = async ({ context, github }) => {
       repo: name,
       issue_number: issue.number,
       labels: [QA_APPROVED_LABEL],
+    });
+
+    github.rest.reactions.createForIssueComment({
+      owner: login,
+      repo: name,
+      comment_id: id,
+      content: "hooray",
     });
   } else {
     github.rest.issues.removeLabel({
