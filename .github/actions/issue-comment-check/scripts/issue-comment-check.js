@@ -15,11 +15,11 @@ module.exports = async ({ context, github }) => {
     owner: { login },
   } = context.payload.repository;
 
-  const comments = await github.rest.issues.listComments({
+  const { data: comments } = await github.rest.issues.listComments({
     owner: login,
     repo: name,
     issue_number: issue.number,
   });
 
-  console.log([comments]);
+  console.log({ comments });
 };
