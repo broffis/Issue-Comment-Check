@@ -1,3 +1,7 @@
 module.exports = ({ context }) => {
-  console.log({ context });
+  const {
+    payload: { comment, issue },
+  } = context;
+
+  console.log({ comment, issue });
 };
