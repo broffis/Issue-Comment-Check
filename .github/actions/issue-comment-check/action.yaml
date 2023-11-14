@@ -1,0 +1,14 @@
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: ".nvmrc"
+    - name: Check Comments
+          uses: actions/github-script@v6
+          with:
+              script: |
+                  const script = require('.github/actions/issue-comment-check/scripts/issue-comment-check.js');
+                  await script({ context })
