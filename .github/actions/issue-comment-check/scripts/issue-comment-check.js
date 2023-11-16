@@ -39,12 +39,16 @@ module.exports = async ({ context, github }) => {
       });
     });
   } else {
-    github.rest.issues.removeLabel({
-      owner: login,
-      repo: name,
-      issue_number: issue.number,
-      name: QA_APPROVED_LABEL,
-    });
+    try {
+      github.rest.issues.removeLabel({
+        owner: login,
+        repo: name,
+        issue_number: issue.number,
+        name: QA_APPROVED_LABEL,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 
