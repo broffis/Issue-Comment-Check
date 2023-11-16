@@ -1,0 +1,43 @@
+name: "QA Approved Label Check"
+
+on:
+  pull_request:
+    types: [labeled, unlabeled, synchronize]
+    # This needs to be run on the synchronize type so that the status can be applied
+    # to each commit. Otherwise, the status will show as pending. We also want it to run on
+    # labeled and unlabeled so that it will detect when the qa-approved label has changed and
+    # will update the status on the head commit accordingly. We are not running it on the open
+    # type even though it will show as pending because another event type should always occur
+    # afterwards that will update the status
+
+jobs:
+  check-that-label:
+    name: QA Approval Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Script Label Checker
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const approvedLabel = "qa-approved";
+            const prLabels = context.payload.pull_request.labels.map((label) => label.name);
+            console.log({ prLabels })
+            const state = prLabels.includes(approvedLabel) ? "success" : "pending";
+
+            const { sha } = context.payload.pull_request.head;
+
+            const {
+              name,
+              owner: { login },
+            } = context.payload.repository;
+
+            const result = await github.rest.repos.createCommitStatus({
+              owner: login,
+              repo: name,
+              sha: sha,
+              state: state,
+              context: 'QA Approval',
+              description: 'Has your code been approved by QA?'
+            });
+
+            console.log({ result });
