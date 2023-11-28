@@ -33,7 +33,13 @@ module.exports = async ({ context, github }) => {
     pull_number: prNumber,
   });
 
-  console.log({ prData });
+  const { data: pullData } = await github.rest.pulls.get({
+    owner: login,
+    repo: name,
+    pull_number: prNumber,
+  });
+
+  console.log({ prData, pullData });
 
   // const { data: getData } = await github.rest.issues.get({
   //   owner: login,
