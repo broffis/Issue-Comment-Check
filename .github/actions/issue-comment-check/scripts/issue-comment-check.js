@@ -9,7 +9,12 @@ module.exports = async ({ context, github }) => {
   } = context;
 
   // console.log({ context });
-  console.log({ issue });
+  // console.log({ issue });
+  const {
+    pull_request: { url: prUrl },
+  } = issue;
+
+  const prNumber = prUrl.split("/").pop();
 
   const {
     name,
@@ -22,13 +27,23 @@ module.exports = async ({ context, github }) => {
     issue_number: issue.number,
   });
 
-  const { data: getData } = await github.rest.issues.get({
+  const { data: prData } = await github.rest.pulls.listCommits({
     owner: login,
     repo: name,
-    issue_number: issue.number,
+    pull_number: prNumber,
   });
 
-  console.log({ getData });
+  console.log({ prData });
+
+  // const { data: getData } = await github.rest.issues.get({
+  //   owner: login,
+  //   repo: name,
+  //   issue_number: issue.number,
+  // });
+
+  // console.log({ getData });
+
+  const { data: commitData } = await github.rest.repos.getCommit({});
 
   const { isApproved, comment_id } = hasQaComment(comments);
 
