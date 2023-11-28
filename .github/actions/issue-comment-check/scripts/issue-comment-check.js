@@ -49,8 +49,6 @@ module.exports = async ({ context, github }) => {
 
   // console.log({ getData });
 
-  const { data: commitData } = await github.rest.repos.getCommit({});
-
   const { isApproved, comment_id } = hasQaComment(comments);
 
   console.log({ isApproved, comment_id });
