@@ -8,7 +8,13 @@ module.exports = async ({ context, github }) => {
     sha,
   } = context;
 
-  console.log({ context });
+  // console.log({ context });
+  // console.log({ issue });
+  const {
+    pull_request: { url: prUrl },
+  } = issue;
+
+  const prNumber = prUrl.split("/").pop();
 
   const {
     name,
@@ -21,6 +27,30 @@ module.exports = async ({ context, github }) => {
     issue_number: issue.number,
   });
 
+  const { data: prData } = await github.rest.pulls.listCommits({
+    owner: login,
+    repo: name,
+    pull_number: prNumber,
+  });
+
+  const { data: pullData } = await github.rest.pulls.get({
+    owner: login,
+    repo: name,
+    pull_number: prNumber,
+  });
+
+  console.log({ prData, pullData });
+
+  // const { data: getData } = await github.rest.issues.get({
+  //   owner: login,
+  //   repo: name,
+  //   issue_number: issue.number,
+  // });
+
+  // console.log({ getData });
+
+  const { data: commitData } = await github.rest.repos.getCommit({});
+
   const { isApproved, comment_id } = hasQaComment(comments);
 
   console.log({ isApproved, comment_id });
@@ -29,43 +59,46 @@ module.exports = async ({ context, github }) => {
     return;
   }
 
-  if (isApproved) {
-    github.rest.issues.addLabels({
-      owner: login,
-      repo: name,
-      issue_number: issue.number,
-      labels: [QA_APPROVED_LABEL],
-    });
+  return;
 
-    QA_REACTS.forEach((emoji) => {
-      github.rest.reactions.createForIssueComment({
-        owner: login,
-        repo: name,
-        comment_id,
-        content: emoji,
-      });
-    });
+  // if (isApproved) {
+  //   github.rest.issues.addLabels({
+  //     owner: login,
+  //     repo: name,
+  //     issue_number: issue.number,
+  //     labels: [QA_APPROVED_LABEL],
+  //   });
 
-    await github.rest.repos.createCommitStatus({
-      owner: login,
-      repo: name,
-      sha,
-      state: "success",
-      context: "QA Approval",
-      description: "Has your code been approved by QA?",
-    });
-  } else {
-    try {
-      github.rest.issues.removeLabel({
-        owner: login,
-        repo: name,
-        issue_number: issue.number,
-        name: QA_APPROVED_LABEL,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  //   QA_REACTS.forEach((emoji) => {
+  //     github.rest.reactions.createForIssueComment({
+  //       owner: login,
+  //       repo: name,
+  //       comment_id,
+  //       content: emoji,
+  //     });
+  //   });
+
+  //   await github.rest.repos.createCommitStatus({
+  //     owner: login,
+  //     repo: name,
+  //     sha,
+  //     // sha: issue.number,
+  //     state: "success",
+  //     context: "QA Approval",
+  //     description: "Has your code been approved by QA?",
+  //   });
+  // } else {
+  //   try {
+  //     github.rest.issues.removeLabel({
+  //       owner: login,
+  //       repo: name,
+  //       issue_number: issue.number,
+  //       name: QA_APPROVED_LABEL,
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 };
 
 const hasQaComment = (comments) => {
