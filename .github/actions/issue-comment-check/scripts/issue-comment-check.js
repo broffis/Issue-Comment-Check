@@ -8,7 +8,8 @@ module.exports = async ({ context, github }) => {
     sha,
   } = context;
 
-  console.log({ context });
+  // console.log({ context });
+  console.log({ issue });
 
   const {
     name,
@@ -50,6 +51,7 @@ module.exports = async ({ context, github }) => {
       owner: login,
       repo: name,
       sha,
+      // sha: issue.number,
       state: "success",
       context: "QA Approval",
       description: "Has your code been approved by QA?",
