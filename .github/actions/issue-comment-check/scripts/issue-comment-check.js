@@ -5,6 +5,7 @@ const QA_REACTS = ["eyes", "hooray", "heart"];
 module.exports = async ({ context, github }) => {
   const {
     payload: { issue, repository },
+    sha,
   } = context;
 
   console.log({ context });
@@ -43,6 +44,15 @@ module.exports = async ({ context, github }) => {
         comment_id,
         content: emoji,
       });
+    });
+
+    await github.rest.repos.createCommitStatus({
+      owner: login,
+      repo: name,
+      sha,
+      state: "success",
+      context: "QA Approval",
+      description: "Has your code been approved by QA?",
     });
   } else {
     try {
