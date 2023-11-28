@@ -31,7 +31,7 @@ jobs:
               owner: { login },
             } = context.payload.repository;
 
-            const result = await github.rest.repos.createCommitStatus({
+             // const result = await github.rest.repos.createCommitStatus({
               owner: login,
               repo: name,
               sha: sha,
