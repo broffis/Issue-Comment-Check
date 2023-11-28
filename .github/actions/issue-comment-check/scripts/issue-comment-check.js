@@ -4,12 +4,10 @@ const QA_REACTS = ["eyes", "hooray", "heart"];
 
 module.exports = async ({ context, github }) => {
   const {
-    // payload: { issue, repository },
-    payload,
+    payload: { issue, repository },
   } = context;
 
-  const { issue, repository } = payload;
-  console.log({ payload });
+  console.log({ context });
 
   const {
     name,
@@ -25,6 +23,10 @@ module.exports = async ({ context, github }) => {
   const { isApproved, comment_id } = hasQaComment(comments);
 
   console.log({ isApproved, comment_id });
+
+  if (!comment_id) {
+    return;
+  }
 
   if (isApproved) {
     github.rest.issues.addLabels({
