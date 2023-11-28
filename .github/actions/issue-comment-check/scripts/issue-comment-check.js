@@ -4,9 +4,11 @@ const QA_REACTS = ["eyes", "hooray", "heart"];
 
 module.exports = async ({ context, github }) => {
   const {
-    payload: { issue, repository },
+    // payload: { issue, repository },
+    payload,
   } = context;
 
+  const { issue, repository } = payload;
   console.log({ payload });
 
   const {
